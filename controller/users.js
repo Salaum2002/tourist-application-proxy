@@ -28,8 +28,9 @@ const getUser = async (req, res) => {
 const signup = async (req, res) => {
   const { username, email, phone, address, password } = req.body;
 
-  const existingUser = await User.findOne({ email, username });
-  if (existingUser) {
+  const existingEmail = await User.findOne({ email });
+  const existingUser = await User.findOne({ username });
+  if (existingUser || existingEmail) {
     return res
       .status(400)
       .json({ msg: "User with the same username or email already exists." });
