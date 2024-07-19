@@ -1,6 +1,5 @@
-import Comment from '../models/Comment.js';
+import Comment from '../models/comment.js'; // Ensure this path is correct
 
-// Controller to handle posting a new comment
 export const postComment = async (req, res) => {
   const { username, commentText } = req.body;
 
@@ -18,7 +17,6 @@ export const postComment = async (req, res) => {
   }
 };
 
-// Controller to handle retrieving all comments
 export const getComments = async (req, res) => {
   try {
     const comments = await Comment.find().sort({ createdAt: -1 });
