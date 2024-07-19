@@ -4,6 +4,7 @@ import { PORT, MONGOOSE_URI } from "./config.js";
 import cors from "cors";
 import { createServer } from "http";
 import usersRoute from "./routes/users.js";
+import commentRoutes from "./routes/commentRoutes.js"; // Import comment routes
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,9 +14,10 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/user", usersRoute);
+app.use("/api", commentRoutes); // Use comment routes
 
 httpServer.listen(PORT, () => {
-  console.log(`App is listening to port: ${PORT}`);
+  console.log(`App is listening on port: ${PORT}`);
 });
 
 // Bump Server
