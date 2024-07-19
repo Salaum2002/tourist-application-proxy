@@ -1,9 +1,9 @@
 import express from "express";
 import { login, getUser, signup } from "../controller/users.js";
-const app = express();
+const router = express.Router();
 
-app.post("/login", login);
-app.post("/get/:id", getUser);
-app.post("/signup", signup);
+router.post("/login", login);
+router.get("/user", getUser);  // Use GET for retrieving users
+router.post("/signup", signup);
 
-export default app;
+export default router;
