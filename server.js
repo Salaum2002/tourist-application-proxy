@@ -13,8 +13,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/user", usersRoute);
-app.use("/api", commentRoutes); // Use comment routes
+// Use routes
+app.use("/api/user", usersRoute); // User routes
+app.use("/api/comments", commentRoutes); // Comment routes
 
 httpServer.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT}`);
