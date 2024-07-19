@@ -1,4 +1,4 @@
-import Comment from '../models/comment.js'; // Ensure this path is correct
+import Comment from '../models/Comment.js';
 
 export const postComment = async (req, res) => {
   const { username, commentText } = req.body;

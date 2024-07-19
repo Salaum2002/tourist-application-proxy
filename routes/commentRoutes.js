@@ -1,5 +1,5 @@
 import express from 'express';
-import { postComment, getComments } from '../controller/comments.js'; // Adjust path if necessary
+import { postComment, getComments } from '../controllers/comments.js';
 
 const router = express.Router();
 
