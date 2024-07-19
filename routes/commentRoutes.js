@@ -3,7 +3,10 @@ import { postComment, getComments } from '../controllers/comments.js';
 
 const router = express.Router();
 
-router.post('/', postComment); // Route to post a comment
-router.get('/', getComments);  // Route to get all comments
+// Route to post a comment
+router.post('/', postComment);
+
+// Route to get all comments
+router.get('/', getComments);
 
 export default router;
