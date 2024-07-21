@@ -46,7 +46,7 @@ const sendNewPasswordEmail = async (email, newPassword) => {
 
 // Password recovery endpoint
 app.post('/api/user/forgot-password', async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body; // Match the field name with the client
 
   if (!email) {
     return res.status(400).json({ message: 'Email address is required' });
