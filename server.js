@@ -46,15 +46,15 @@ const sendNewPasswordEmail = async (email, newPassword) => {
 
 // Password recovery endpoint
 app.post('/api/user/forgot-password', async (req, res) => {
-  const { phoneNumber } = req.body;
+  const { email } = req.body;
 
-  if (!phoneNumber) {
-    return res.status(400).json({ message: 'Phone number is required' });
+  if (!email) {
+    return res.status(400).json({ message: 'Email address is required' });
   }
 
   try {
-    // Find user by phone number
-    const user = await User.findOne({ phone: phoneNumber });
+    // Find user by email
+    const user = await User.findOne({ email: email });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
