@@ -5,7 +5,7 @@ import { createServer } from 'http';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 import { PORT, MONGOOSE_URI, EMAIL_USER, EMAIL_PASS } from './config.js';
-import User from './models/User.js';
+import User from './models/users.js';
 import usersRoute from './routes/users.js';
 import commentRoutes from './routes/commentRoutes.js';
 
