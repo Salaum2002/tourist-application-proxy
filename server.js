@@ -57,14 +57,13 @@ app.post('/api/user/forgot-password', async (req, res) => {
   }
 
   try {
-    // Find user by email
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate a new password (for demo purposes; use a more secure method in production)
+    // Generate a new password (use a more secure method in production)
     const newPassword = Math.random().toString(36).slice(-8);
 
     // Hash the new password before saving
@@ -77,14 +76,9 @@ app.post('/api/user/forgot-password', async (req, res) => {
 
     res.status(200).json({ message: 'A new password has been sent to your email address' });
   } catch (error) {
-    console.error(error);
+    console.error('Error processing request:', error);
     res.status(500).json({ message: 'Error processing the request' });
   }
-});
-
-// Ping endpoint for connection status
-app.get('/ping', (req, res) => {
-  res.json({ connected: true });
 });
 
 // Start server
@@ -92,12 +86,12 @@ httpServer.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT}`);
 });
 
+// Ping endpoint for checking server status
+app.get('/ping', (req, res) => {
+  res.json({ connected: true });
+});
+
 // Connect to MongoDB
-mongoose
-  .connect(MONGOOSE_URI)
-  .then(() => {
-    console.log('App connected to database');
-  })
-  .catch((error) => {
-    console.log('Database connection error:', error);
-  });
+mongoose.connect(MONGOOSE_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('App connected to database'))
+  .catch((error) => console.error('Database connection error:', error));

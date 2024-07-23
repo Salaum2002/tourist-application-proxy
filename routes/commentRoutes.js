@@ -1,5 +1,6 @@
 import express from 'express';
 import Comment from '../models/comment.js'; // Ensure the path is correct
+
 const router = express.Router();
 
 // POST request to add a new comment
