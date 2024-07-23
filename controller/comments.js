@@ -1,28 +1,68 @@
-import Comment from '../models/comment.js';
+import express from 'express';
+import Comment from '../models/comment.js'; // Adjust the path if necessary
 
-export const postComment = async (req, res) => {
+const router = express.Router();
+
+// Route to fetch all comments
+router.get('/', async (req, res) => {
+  try {
+    const comments = await Comment.find().sort({ createdAt: -1 }); // Fetch and sort comments by creation date (newest first)
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Failed to fetch comments' });
+  }
+});
+
+// Route to post a new comment
+router.post('/', async (req, res) => {
   const { username, commentText } = req.body;
 
   if (!username || !commentText) {
-    return res.status(400).json({ msg: "Username and comment text are required." });
+    return res.status(400).json({ message: 'Username and comment text are required' });
   }
 
   try {
     const newComment = new Comment({ username, commentText });
-    const savedComment = await newComment.save();
-    res.status(201).json(savedComment);
+    await newComment.save();
+    res.status(201).json(newComment);
   } catch (error) {
-    console.error("Error saving comment: ", error);
-    res.status(500).json({ msg: "Server error" });
+    console.error('Error posting comment:', error);
+    res.status(500).json({ message: 'Failed to post comment' });
   }
-};
+});
 
-export const getComments = async (req, res) => {
+// Route to update a comment by ID
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { commentText } = req.body;
+
   try {
-    const comments = await Comment.find().sort({ createdAt: -1 });
-    res.status(200).json(comments);
+    const updatedComment = await Comment.findByIdAndUpdate(id, { commentText }, { new: true });
+    if (!updatedComment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.status(200).json(updatedComment);
   } catch (error) {
-    console.error("Error retrieving comments: ", error);
-    res.status(500).json({ msg: "Server error" });
+    console.error('Error updating comment:', error);
+    res.status(500).json({ message: 'Failed to update comment' });
   }
-};
+});
+
+// Route to delete a comment by ID
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedComment = await Comment.findByIdAndDelete(id);
+    if (!deletedComment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.status(200).json({ message: 'Comment deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    res.status(500).json({ message: 'Failed to delete comment' });
+  }
+});
+
+export default router;
