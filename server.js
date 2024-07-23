@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -13,10 +12,12 @@ import commentRoutes from './routes/commentRoutes.js';
 const app = express();
 const httpServer = createServer(app);
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
+// Routes
 app.use('/api/user', usersRoute);
 app.use('/api/comments', commentRoutes);
 
@@ -81,14 +82,17 @@ app.post('/api/user/forgot-password', async (req, res) => {
   }
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`App is listening on port: ${PORT}`);
-});
-
+// Ping endpoint for connection status
 app.get('/ping', (req, res) => {
   res.json({ connected: true });
 });
 
+// Start server
+httpServer.listen(PORT, () => {
+  console.log(`App is listening on port: ${PORT}`);
+});
+
+// Connect to MongoDB
 mongoose
   .connect(MONGOOSE_URI)
   .then(() => {
