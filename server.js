@@ -92,6 +92,6 @@ app.get('/ping', (req, res) => {
 });
 
 // Connect to MongoDB
-mongoose.connect(MONGOOSE_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGOOSE_URI)
   .then(() => console.log('App connected to database'))
   .catch((error) => console.error('Database connection error:', error));
