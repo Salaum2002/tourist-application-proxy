@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -37,8 +38,10 @@ const sendNewPasswordEmail = async (email, newPassword) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully');
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully to:', email);
+    console.log('Message ID:', info.messageId);
+    console.log('Response:', info.response);
   } catch (error) {
     console.error('Error sending email:', error);
   }
@@ -46,7 +49,7 @@ const sendNewPasswordEmail = async (email, newPassword) => {
 
 // Password recovery endpoint
 app.post('/api/user/forgot-password', async (req, res) => {
-  const { email } = req.body; // Match the field name with the client
+  const { email } = req.body;
 
   if (!email) {
     return res.status(400).json({ message: 'Email address is required' });
@@ -92,5 +95,5 @@ mongoose
     console.log('App connected to database');
   })
   .catch((error) => {
-    console.log(error);
+    console.log('Database connection error:', error);
   });
