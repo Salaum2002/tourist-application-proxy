@@ -61,7 +61,8 @@ app.post('/api/user/forgot-password', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const newPassword = Math.random().toString(36).slice(-8);
+    // Generate a new password
+    const newPassword = Math.random().toString(36).slice(-8); // Ensure complexity in production
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
@@ -75,10 +76,6 @@ app.post('/api/user/forgot-password', async (req, res) => {
   }
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`App is listening on port: ${PORT}`);
-});
-
 app.get('/ping', (req, res) => {
   res.json({ connected: true });
 });
@@ -86,3 +83,7 @@ app.get('/ping', (req, res) => {
 mongoose.connect(MONGOOSE_URI)
   .then(() => console.log('App connected to database'))
   .catch((error) => console.error('Database connection error:', error));
+
+httpServer.listen(PORT, () => {
+  console.log(`App is listening on port: ${PORT}`);
+});

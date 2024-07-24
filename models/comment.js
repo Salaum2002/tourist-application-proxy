@@ -9,7 +9,7 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { timestamps: true });
+}, { timestamps: true }); // Ensure timestamps are enabled
 
 const Comment = mongoose.model('Comment', commentSchema);
 
