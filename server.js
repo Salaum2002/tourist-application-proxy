@@ -61,8 +61,7 @@ app.post('/api/user/forgot-password', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate a new password
-    const newPassword = Math.random().toString(36).slice(-8); // Ensure complexity in production
+    const newPassword = Math.random().toString(36).slice(-8);
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
@@ -83,6 +82,16 @@ app.get('/ping', (req, res) => {
 mongoose.connect(MONGOOSE_URI)
   .then(() => console.log('App connected to database'))
   .catch((error) => console.error('Database connection error:', error));
+
+// Define the comments route
+app.get('/api/comments', async (req, res) => {
+  try {
+    const comments = await Comment.find().sort({ createdAt: -1 });
+    res.json(comments); // Ensure each comment object has 'username' and 'commentText'
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching comments' });
+  }
+});
 
 httpServer.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT}`);
