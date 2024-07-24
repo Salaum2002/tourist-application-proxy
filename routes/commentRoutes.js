@@ -1,34 +1,59 @@
 import express from 'express';
-import Comment from '../models/comment.js'; // Ensure the path is correct
+import Comment from '../models/comments.js';
 
 const router = express.Router();
 
-// POST request to add a new comment
-router.post('/', async (req, res) => {
-  const { username, commentText } = req.body;
-
-  if (!username || !commentText) {
-    return res.status(400).json({ message: 'Username and commentText are required' });
-  }
-
+// Get all comments
+router.get('/', async (req, res) => {
   try {
-    const newComment = new Comment({ username, commentText });
-    await newComment.save();
-    res.status(201).json(newComment);
+    const comments = await Comment.find().sort({ createdAt: -1 });
+    res.json(comments);
   } catch (error) {
-    console.error('Error saving comment:', error);
-    res.status(500).json({ message: 'Failed to submit comment' });
+    res.status(500).json({ message: 'Error retrieving comments' });
   }
 });
 
-// GET request to fetch all comments
-router.get('/', async (req, res) => {
+// Post a new comment
+router.post('/', async (req, res) => {
+  const { userName, commentText } = req.body;
+  const newComment = new Comment({ userName, commentText });
+
   try {
-    const comments = await Comment.find();
-    res.status(200).json(comments);
+    const savedComment = await newComment.save();
+    res.status(201).json(savedComment);
   } catch (error) {
-    console.error('Error fetching comments:', error);
-    res.status(500).json({ message: 'Failed to fetch comments' });
+    res.status(500).json({ message: 'Error saving comment' });
+  }
+});
+
+// Edit a comment
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { commentText } = req.body;
+
+  try {
+    const updatedComment = await Comment.findByIdAndUpdate(id, { commentText }, { new: true });
+    if (!updatedComment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating comment' });
+  }
+});
+
+// Delete a comment
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedComment = await Comment.findByIdAndDelete(id);
+    if (!deletedComment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.json({ message: 'Comment deleted' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting comment' });
   }
 });
 

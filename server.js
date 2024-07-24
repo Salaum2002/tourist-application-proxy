@@ -12,12 +12,10 @@ import commentRoutes from './routes/commentRoutes.js';
 const app = express();
 const httpServer = createServer(app);
 
-// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// Routes
 app.use('/api/user', usersRoute);
 app.use('/api/comments', commentRoutes);
 
@@ -63,15 +61,11 @@ app.post('/api/user/forgot-password', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate a new password (use a more secure method in production)
     const newPassword = Math.random().toString(36).slice(-8);
-
-    // Hash the new password before saving
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 
-    // Send the new password to the user via email
     await sendNewPasswordEmail(user.email, newPassword);
 
     res.status(200).json({ message: 'A new password has been sent to your email address' });
@@ -81,17 +75,14 @@ app.post('/api/user/forgot-password', async (req, res) => {
   }
 });
 
-// Start server
 httpServer.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT}`);
 });
 
-// Ping endpoint for checking server status
 app.get('/ping', (req, res) => {
   res.json({ connected: true });
 });
 
-// Connect to MongoDB
 mongoose.connect(MONGOOSE_URI)
   .then(() => console.log('App connected to database'))
   .catch((error) => console.error('Database connection error:', error));
