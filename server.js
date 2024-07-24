@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 import { PORT, MONGOOSE_URI, EMAIL_USER, EMAIL_PASS } from './config.js';
 import User from './models/users.js';
+import Comment from './models/comment.js'; // Import Comment model
 import usersRoute from './routes/users.js';
 import commentRoutes from './routes/commentRoutes.js';
 
@@ -79,19 +80,19 @@ app.get('/ping', (req, res) => {
   res.json({ connected: true });
 });
 
-mongoose.connect(MONGOOSE_URI)
-  .then(() => console.log('App connected to database'))
-  .catch((error) => console.error('Database connection error:', error));
-
 // Define the comments route
 app.get('/api/comments', async (req, res) => {
   try {
     const comments = await Comment.find().sort({ createdAt: -1 });
-    res.json(comments); // Ensure each comment object has 'username' and 'commentText'
+    res.json(comments); // Ensure each comment object has 'userName' and 'commentText'
   } catch (error) {
     res.status(500).json({ message: 'Error fetching comments' });
   }
 });
+
+mongoose.connect(MONGOOSE_URI)
+  .then(() => console.log('App connected to database'))
+  .catch((error) => console.error('Database connection error:', error));
 
 httpServer.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT}`);
