@@ -81,10 +81,27 @@ app.get('/ping', (req, res) => {
 });
 
 // Define the comments route
+app.post('/api/comments', async (req, res) => {
+  const { username, commentText } = req.body;
+
+  if (!username || !commentText) {
+    return res.status(400).json({ message: 'Username and comment text are required' });
+  }
+
+  try {
+    const newComment = new Comment({ username, commentText });
+    await newComment.save();
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.error('Error saving comment:', error);
+    res.status(500).json({ message: 'Error saving comment' });
+  }
+});
+
 app.get('/api/comments', async (req, res) => {
   try {
     const comments = await Comment.find().sort({ createdAt: -1 });
-    res.json(comments); // Ensure each comment object has 'userName' and 'commentText'
+    res.json(comments); // Ensure each comment object has 'username' and 'commentText'
   } catch (error) {
     res.status(500).json({ message: 'Error fetching comments' });
   }
