@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     required: true
   },
@@ -9,7 +9,9 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { timestamps: true }); // Ensure timestamps are enabled
+}, {
+  timestamps: true
+});
 
 const Comment = mongoose.model('Comment', commentSchema);
 
