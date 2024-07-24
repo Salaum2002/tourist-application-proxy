@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
     const comments = await Comment.find().sort({ createdAt: -1 });
     res.json(comments);
   } catch (error) {
+    console.error('Error fetching comments:', error.message);
     res.status(500).json({ message: 'Error fetching comments' });
   }
 });
@@ -23,9 +24,10 @@ router.post('/', async (req, res) => {
 
   try {
     const newComment = new Comment({ userName, commentText });
-    await newComment.save();
-    res.status(201).json(newComment);
+    const savedComment = await newComment.save();
+    res.status(201).json(savedComment);
   } catch (error) {
+    console.error('Error creating comment:', error.message);
     res.status(500).json({ message: 'Error creating comment' });
   }
 });
@@ -46,6 +48,7 @@ router.put('/:id', async (req, res) => {
     }
     res.json(updatedComment);
   } catch (error) {
+    console.error('Error updating comment:', error.message);
     res.status(500).json({ message: 'Error updating comment' });
   }
 });
@@ -61,6 +64,7 @@ router.delete('/:id', async (req, res) => {
     }
     res.json({ message: 'Comment deleted successfully' });
   } catch (error) {
+    console.error('Error deleting comment:', error.message);
     res.status(500).json({ message: 'Error deleting comment' });
   }
 });
